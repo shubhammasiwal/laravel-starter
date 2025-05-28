@@ -14,6 +14,15 @@ class UserCreate extends Component
     public $confirm_password;
 
 
+    /**
+     * Handle the submission of the user creation form.
+     *
+     * Validates the input fields for name, email, password, and confirm password.
+     * If validation passes, creates a new user with the provided data and hashes the password.
+     * Resets the form fields and redirects to the users index page with a success message.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function submit() {
         $this->validate([
             'name' => 'required|string|max:255',
@@ -48,6 +57,11 @@ class UserCreate extends Component
         return to_route('users.index')->with('success', 'User created successfully.');
     }
 
+    /**
+     * Render the Livewire component view for creating a user.
+     *
+     * @return \Illuminate\View\View
+     */
     public function render()
     {
         return view('livewire.users.user-create');

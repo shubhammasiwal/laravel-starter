@@ -1,10 +1,13 @@
 <?php
 
+use App\Livewire\Roles\RoleIndex;
+use App\Livewire\Roles\RoleCreate;
+use App\Livewire\Roles\RoleEdit;
+use App\Livewire\Users\UserIndex;
+use App\Livewire\Users\UserCreate;
 use App\Livewire\Users\UserEdit;
 use App\Livewire\Users\UserShow;
-use App\Livewire\Users\UserIndex;
 use App\Livewire\Settings\Profile;
-use App\Livewire\Users\UserCreate;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Appearance;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +22,12 @@ Route::view('dashboard', 'dashboard')
 
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
+
+    // Role Routes
+    Route::get('roles', RoleIndex::class)->name('roles.index');
+    Route::get('roles/create', RoleCreate::class)->name('roles.create');
+    Route::get('roles/{id}/edit', RoleEdit::class)->name('roles.edit');
+
 
     // User Routes
     Route::get('users', UserIndex::class)->name('users.index');
