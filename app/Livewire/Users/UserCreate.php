@@ -1,0 +1,55 @@
+<?php
+
+namespace App\Livewire\Users;
+
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Livewire\Component;
+
+class UserCreate extends Component
+{
+    public $name;
+    public $email;
+    public $password;
+    public $confirm_password;
+
+
+    public function submit() {
+        $this->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email',
+            'password' => 'required|string|min:8|same:confirm_password',
+            'confirm_password' => 'required|string|min:8|same:password',
+        ], [
+            'name.required' => 'The name field is required.',
+            'name.max' => 'The name may not be greater than 255 characters.',
+            'email.required' => 'The email field is required.',
+            'email.email' => 'Please enter a valid email address.',
+            'email.max' => 'The email may not be greater than 255 characters.',
+            'email.unique' => 'This email is already taken.',
+            'password.required' => 'The password field is required.',
+            'password.min' => 'The password must be at least 8 characters.',
+            'password.same' => 'The password and confirmation do not match.',
+            'confirm_password.required' => 'The confirm password field is required.',
+            'confirm_password.min' => 'The confirm password must be at least 8 characters.',
+            'confirm_password.same' => 'The password and confirmation do not match.',
+        ]);
+
+        // Create the user
+        User::create([
+            'name' => $this->name,
+            'email' => $this->email,
+            'password' => Hash::make($this->password),
+        ]);
+
+        $this->reset(['name', 'email', 'password', 'confirm_password']);
+
+        // Redirect or show a success message
+        return to_route('users.index')->with('success', 'User created successfully.');
+    }
+
+    public function render()
+    {
+        return view('livewire.users.user-create');
+    }
+}
