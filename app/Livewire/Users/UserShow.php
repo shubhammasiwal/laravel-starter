@@ -10,6 +10,8 @@ class UserShow extends Component
     public $name;
     public $email;
     public $user;
+    public $roles = [];
+    public $permissions = [];
 
     /**
      * Initialize the component with the specified user's data.
@@ -25,6 +27,8 @@ class UserShow extends Component
         $this->user = User::findOrfail($id);
         $this->name = $this->user->name;
         $this->email = $this->user->email;
+        $this->roles = $this->user->roles()->pluck('name');
+        $this->permissions = $this->user->getAllPermissions()->pluck('name');
     }
 
     /**

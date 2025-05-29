@@ -18,7 +18,7 @@ class UserIndex extends Component
     public function render()
     {
         return view('livewire.users.user-index', [
-            'users' => User::orderBy('id')->get()
+            'users' => User::all()
         ]);
     }
 

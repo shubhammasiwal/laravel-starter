@@ -2,13 +2,26 @@
 
 namespace App\Livewire\Roles;
 
-use App\Models\Role;
 use Livewire\Component;
-use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class RoleCreate extends Component
 {
     public $name;
+    public $permissions_to_view = [];
+    public $permissions = [];
+
+    /**
+     * Mount the component with initial data.
+     *
+     * Initializes the component with an empty name and retrieves all permissions.
+     */
+    public function mount() {
+        $this->name = '';
+        $this->permissions_to_view = Permission::all();
+    }
+    
 
     /**
      * Handles the submission of the role creation form.
@@ -21,13 +34,17 @@ class RoleCreate extends Component
      * @return \Illuminate\Http\RedirectResponse
      */
     public function submit() {
-         $rules = [
+        $rules = [
             'name' => [
                 'required',
                 'string',
                 'max:255',
                 'regex:/^[a-zA-Z\s]+$/',
                 'unique:roles,name',
+            ],
+            'permissions' => [
+                'array',
+                'exists:permissions,name',
             ]
         ];
 
@@ -36,17 +53,20 @@ class RoleCreate extends Component
             'name.max' => 'The name may not be greater than 255 characters.',
             'name.unique' => 'This role name is already taken.',
             'name.regex' => 'Only letters and spaces are allowed in the name.',
+            'permissions.array' => 'The permissions must be an array.',
+            'permissions.exists' => 'One or more selected permissions are invalid.',
         ];
 
         $this->validate($rules, $messages);
 
         // Create the role
-        Role::create([
-            'name' => strtolower($this->name),
-            'slug' => Str::kebab(strtolower($this->name)),
+        $role = Role::create([
+            'name' => $this->name,
         ]);
+        
+        $role->syncPermissions($this->permissions);
 
-        $this->reset('name');
+        $this->reset(['name', 'permissions']);
 
         // Redirect or show a success message
         return to_route('roles.index')->with('success', 'Role created successfully.');

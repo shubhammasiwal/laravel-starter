@@ -2,14 +2,16 @@
 
 namespace App\Livewire\Roles;
 
-use App\Models\Role;
 use Livewire\Component;
-use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class RoleEdit extends Component
 {
     public $name;
     public $role;
+    public $permissions_to_view = [];
+    public $permissions = [];
 
     /**
      * Initialize the component with the specified role.
@@ -23,7 +25,9 @@ class RoleEdit extends Component
      */
     public function mount($id) {
         $this->role = Role::findOrFail($id);
+        $this->permissions_to_view = Permission::all();
         $this->name = $this->role->name;
+        $this->permissions = $this->role->permissions->pluck("name");
     }
 
     /**
@@ -48,6 +52,10 @@ class RoleEdit extends Component
                 'max:255',
                 'regex:/^[a-zA-Z\s]+$/',
                 'unique:roles,name,' . $this->role->id,
+            ],
+            'permissions' => [
+                'array',
+                'exists:permissions,name',
             ]
         ];
 
@@ -55,15 +63,18 @@ class RoleEdit extends Component
             'name.required' => 'The name field is required.',
             'name.max' => 'The name may not be greater than 255 characters.',
             'name.unique' => 'This role name is already taken.',
-            'name.regex' => 'Only uppercase and lowercase letters are allowed in the name.',
+            'name.regex' => 'Only letters and spaces are allowed in the name.',
+            'permissions.array' => 'The permissions must be an array.',
+            'permissions.exists' => 'One or more selected permissions are invalid.',
         ];
 
         $this->validate($rules, $messages);
 
         // Update the role
-        $this->role->name = strtolower($this->name);
-        $this->role->slug = Str::kebab(strtolower($this->name));
+        $this->role->name = $this->name;
         $this->role->save();
+
+        $this->role->syncPermissions($this->permissions);
 
         $this->reset(['name']);
 
@@ -78,8 +89,7 @@ class RoleEdit extends Component
      *
      * @return \Illuminate\View\View
      */
-    public function render()
-    {
+    public function render() {
         return view('livewire.roles.role-edit');
     }
 }

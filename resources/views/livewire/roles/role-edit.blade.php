@@ -12,6 +12,13 @@
         <form wire:submit="submit" class="space-y-4">
             <flux:input wire:model="name" label="Name" placeholder="Name" />
 
+            <flux:checkbox.group wire:model="permissions" label="Permissions">
+                <flux:checkbox.all label="Select All" value="all" />
+                @foreach ($permissions_to_view as $permission)    
+                        <flux:checkbox label="{{ $permission->name }}" value="{{ $permission->name }}" />
+                @endforeach
+            </flux:checkbox.group>
+
             <flux:button type="submit" variant="primary">Submit</flux:button>
         </form>
 

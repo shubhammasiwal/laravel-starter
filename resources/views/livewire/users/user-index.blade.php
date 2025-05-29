@@ -27,6 +27,9 @@
                     <th scope="col" class="px-6 py-3">
                         Email
                     </th>
+                    <th scope="col" class="px-6 py-3">
+                        Roles
+                    </th>
                     <th scope="col" class="px-6 py-3 w-80">
                         Actions
                     </th>
@@ -43,6 +46,15 @@
                         </td>
                         <td class="px-6 py-4">
                             {{ $user->email }}
+                        </td>
+                        <td class="px-6 py-4">
+                            @if ($user->roles->isEmpty())
+                                <flux:badge>No Role</flux:badge>
+                            @else
+                                @foreach ($user->roles as $role)
+                                    <flux:badge class="mr-1">{{ $role->name }}</flux:badge>
+                                @endforeach
+                            @endif
                         </td>
                         <td class="px-6 py-4">
                             <a href="{{ route("users.show", $user->id) }}" class="cursor-pointer mr-2 px-3 py-2 text-xs font-medium text-white bg-gray-600 rounded hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-300 dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-800">

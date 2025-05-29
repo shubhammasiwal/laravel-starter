@@ -4,6 +4,7 @@ namespace App\Livewire\Users;
 
 use App\Models\User;
 use Livewire\Component;
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
 
 class UserEdit extends Component
@@ -13,6 +14,8 @@ class UserEdit extends Component
     public $password;
     public $confirm_password;
     public $user;
+    public $roles = [];
+    public $roles_list;
 
     /**
      * Initialize the component with the user's data based on the provided ID.
@@ -29,6 +32,8 @@ class UserEdit extends Component
         $this->user = User::findOrFail($id);
         $this->name = $this->user->name;
         $this->email = $this->user->email;
+        $this->roles_list = Role::all();
+        $this->roles = $this->user->roles()->pluck('name');
     }
 
     /**
@@ -76,6 +81,8 @@ class UserEdit extends Component
             $this->user->password = Hash::make($this->password);
         }
         $this->user->save();
+        $this->user->syncRoles($this->roles);
+
 
         $this->reset(['name', 'email', 'password', 'confirm_password']);
 

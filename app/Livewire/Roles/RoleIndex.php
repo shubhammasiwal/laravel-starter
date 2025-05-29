@@ -2,8 +2,8 @@
 
 namespace App\Livewire\Roles;
 
-use App\Models\Role;
 use Livewire\Component;
+use Spatie\Permission\Models\Role;
 
 class RoleIndex extends Component
 {
@@ -15,8 +15,9 @@ class RoleIndex extends Component
      * @return \Illuminate\View\View The rendered view with the list of roles.
      */
     public function render() {
+        $roles = Role::with('permissions')->get();
         return view('livewire.roles.role-index', [
-            'roles' => Role::orderBy('id')->get()
+            'roles' => $roles
         ]);
     }
 

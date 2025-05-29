@@ -15,5 +15,25 @@
         <p>
             <strong>Email:</strong> {{ $user->email }}
         </p>
+        <p>
+            <strong>Roles:</strong>
+            @if($user->roles->isEmpty())
+                <flux:badge>No Role</flux:badge>
+            @else
+                @foreach($user->roles as $role)
+                    <flux:badge class="mr-1">{{ $role->name }}</flux:badge>
+                @endforeach
+            @endif
+        </p>
+        <p>
+            <strong>Permissions:</strong>
+            @if($user->getAllPermissions()->isEmpty())
+                No Permission
+            @else
+                @foreach($user->getAllPermissions() as $permission)
+                    <flux:badge class="mr-1">{{ $permission->name }}</flux:badge>
+                @endforeach
+            @endif
+        </p>
     </div>
 </div>
