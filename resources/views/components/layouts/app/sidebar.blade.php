@@ -16,6 +16,8 @@
                     <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
                     <flux:navlist.item icon="shield-check" :href="route('roles.index')" :current="request()->routeIs('roles.index')" wire:navigate>{{ __('Roles') }}</flux:navlist.item>
                     <flux:navlist.item icon="users" :href="route('users.index')" :current="request()->routeIs('users.index')" wire:navigate>{{ __('Users') }}</flux:navlist.item>
+                    <flux:navlist.item icon="map-pin" :href="route('l-g-d-states.index')" :current="request()->routeIs('l-g-d-state.index')" wire:navigate>{{ __('LDG States') }}</flux:navlist.item>
+                    {{-- <flux:navlist.item icon="map-pin" :href="route('l-g-d-district.index')" :current="request()->routeIs('l-g-d-district.index')" wire:navigate>{{ __('LDG Districts') }}</flux:navlist.item> --}}
                 </flux:navlist.group>
             </flux:navlist>
 
