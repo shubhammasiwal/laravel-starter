@@ -14,9 +14,7 @@ class LGDDistrictSeeder extends Seeder
      */
     public function run(): void
     {
-        // dd(storage_path('app/lgd_districts.xlsx'));
         $path = storage_path('app/private/lgd_districts.xlsx');
-
         $rows = Excel::toArray([], $path)[0];
 
         // Skip header row, start from 1 if first row is header
